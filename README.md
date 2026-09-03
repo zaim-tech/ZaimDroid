@@ -1,14 +1,41 @@
 # ZaimDroid
 
-ZaimDroid is a Windows command-line utility for managing and testing Android devices through **ADB** and **scrcpy**.
+![Security Tool](https://img.shields.io/badge/Focus-Android%20Security-111827?logo=android&logoColor=3DDC84)
+![Authorized Testing](https://img.shields.io/badge/Use-Authorized%20Testing-dc2626?logo=shield&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)
 
-It provides a simple menu for authorized device administration, screen control, camera testing, device inspection, and Android shell commands.
+> **ZAIM TECH // ANDROID SECURITY LAB**
 
-## Disclaimer
+ZaimDroid is a Windows command-line utility for Android security testing, mobile awareness demonstrations, and authorized device administration through **ADB** and **scrcpy**.
 
-Use ZaimDroid only with devices that you own or are explicitly authorized to test. Do not use it to access, monitor, record, or control another person's device without permission. You are responsible for following all applicable laws and policies.
+It helps students, developers, and security testers inspect their own Android devices, understand debugging exposure, and document controlled security-lab exercises.
 
-## Features
+## Rules Of Engagement
+
+Only use ZaimDroid in a legal, controlled environment:
+
+- Test devices you own or have written permission to assess.
+- Get consent before mirroring screens, opening cameras, recording, or running commands.
+- Use a private lab network for wireless debugging.
+- Do not use the tool to access, monitor, record, or control another person's device.
+- Remove test recordings and sensitive device data after an exercise.
+
+You are responsible for following all applicable laws, policies, and organizational rules.
+
+## Security And Awareness Uses
+
+ZaimDroid can support safe demonstrations and defensive work such as:
+
+- Showing why USB debugging should be disabled when it is not needed.
+- Demonstrating the difference between an authorized and unauthorized ADB state.
+- Inspecting device properties and installed packages on a test phone.
+- Reviewing the risks of wireless debugging on an untrusted network.
+- Recording a consented test scenario for training or incident documentation.
+- Practicing mobile-device assessment workflows in a personal lab.
+
+ZaimDroid is not an exploit framework, credential-stealing tool, or permission-bypass utility.
+
+## Capabilities
 
 - Connect to an Android device over USB.
 - Connect to an authorized device using its serial number.
@@ -86,7 +113,7 @@ Recordings are written to `output.mp4` in the current working directory. A later
 
 Camera and microphone options depend on the Android version, device permissions, and the bundled scrcpy version.
 
-## Useful Authorized Commands
+## Authorized Security Checks
 
 The command menu sends input through `adb shell`. Examples for your own test device:
 
@@ -97,7 +124,27 @@ df -h
 pm list packages
 ```
 
-Avoid commands that delete data, change security settings, install unknown software, or modify a device unless you fully understand their effect and have permission.
+These read-only examples are suitable for a personal test device:
+
+```text
+getprop ro.product.model
+getprop ro.build.version.release
+settings get global adb_enabled
+wm size
+df -h
+pm list packages
+```
+
+Review the output as test evidence, and avoid commands that delete data, change security settings, install unknown software, or modify a device unless you fully understand their effect and have permission.
+
+## Safe Testing Workflow
+
+1. Define the device, purpose, and test window.
+2. Confirm written authorization and user consent.
+3. Prefer USB debugging on a private test setup.
+4. Record only the evidence needed for the exercise.
+5. Disconnect the device and disable debugging when finished.
+6. Delete sensitive recordings and document the findings.
 
 ## Troubleshooting
 
