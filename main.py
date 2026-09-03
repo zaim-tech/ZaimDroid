@@ -216,8 +216,8 @@ def connection_menu() -> None:
 
 def camera_menu() -> None:
     options = {
-        "1": ("Front Camera", "--video-source=camera", "--camera-facing=front"),
-        "2": ("Back Camera", "--video-source=camera", "--camera-facing=back"),
+        "1": ("Front Camera", "--video-source=camera", "--camera-facing=front", "--no-audio"),
+        "2": ("Back Camera", "--video-source=camera", "--camera-facing=back", "--no-audio"),
         "3": (
             "Front Camera and Recording",
             "--video-source=camera",
