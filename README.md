@@ -25,34 +25,18 @@ Use ZaimDroid only with devices that you own or are explicitly authorized to tes
 ## Requirements
 
 - Windows 10 or newer.
-- Python 3.10 or newer if running from source.
+- The built ZaimDroid Windows executable.
 - An Android device with USB debugging enabled.
-- A USB cable for the first USB connection or Android wireless debugging configured on the same network.
-- The following files in the project folder:
-  - `adb.exe`
-  - `scrcpy.exe`
-  - scrcpy's required DLL files
-  - `scrcpy-server`
 
-The included ADB and scrcpy files are already referenced by `main.py` and are expected to be beside it.
+The executable already contains the required application files. You do not need to install Python, ADB, scrcpy, or separate DLL files.
 
 ## Installation
 
-1. Open PowerShell in this project folder.
-2. Install the Python dependency:
-
-   ```powershell
-   python -m pip install colorama
-   ```
-
-3. Connect your authorized Android device.
-4. Unlock the device and accept the USB debugging authorization prompt.
-
-## Run From Source
-
-```powershell
-python main.py
-```
+1. Download the ZaimDroid `.exe` file.
+2. Place it in a folder of your choice.
+3. Connect your authorized Android device and unlock it.
+4. Run the executable.
+5. Accept the USB debugging authorization prompt on the device.
 
 The main menu contains these options:
 
@@ -70,16 +54,10 @@ The main menu contains these options:
 
 1. Enable **Developer options** and **USB debugging** on the Android device.
 2. Connect the device with a USB cable.
-3. Run `python main.py`.
+3. Run the ZaimDroid `.exe` file.
 4. Choose `1`, then choose `3. Connect via USB`.
 
-If the device is not shown, run this from PowerShell to check its ADB status:
-
-```powershell
-.\adb.exe devices
-```
-
-The device should appear with the status `device`, not `unauthorized`.
+If the device is not shown, restart ZaimDroid, reconnect the device, and make sure the device is authorized.
 
 ## Wireless Connection
 
@@ -121,9 +99,9 @@ Avoid commands that delete data, change security settings, install unknown softw
 
 ## Troubleshooting
 
-### `adb.exe` cannot be found
+### Required files cannot be found
 
-Confirm that `adb.exe` is in the same folder as `main.py` or the built executable.
+Download the complete ZaimDroid Windows release again. The ADB and scrcpy files are bundled with the executable package.
 
 ### Device is unauthorized
 
@@ -131,26 +109,15 @@ Unlock the device, accept the USB debugging prompt, then run the connection opti
 
 ### No device is listed
 
-Try another USB cable or port, confirm USB debugging is enabled, and check the output of:
-
-```powershell
-.\adb.exe devices
-```
+Try another USB cable or port, confirm USB debugging is enabled, and restart ZaimDroid.
 
 ### scrcpy does not start
 
-Confirm that `scrcpy.exe`, `scrcpy-server`, and all required scrcpy DLL files are present beside the program. Also check that the connected device is authorized.
+Download the complete ZaimDroid Windows release again and check that the connected device is authorized.
 
 ### Camera or microphone fails
 
 The device may not expose the requested camera/audio source to scrcpy. Check Android permissions and verify that the bundled scrcpy version supports the selected feature.
-
-## Project Files
-
-- `main.py`: ZaimDroid application source.
-- `adb.exe`: Android Debug Bridge executable.
-- `scrcpy.exe`: Android screen mirroring and control executable.
-- `scrcpy-server`: scrcpy server used on the Android device.
 
 ## Support The Project
 
