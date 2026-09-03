@@ -32,6 +32,8 @@ The executable already contains the required application files. You do not need 
 
 ## Installation
 
+[![Download for Windows](https://img.shields.io/badge/Download-Windows-0078D6?logo=windows&logoColor=white)](https://github.com/zaim-tech/ZaimDroid/releases/download/0.1/main.exe)
+
 1. Download the [ZaimDroid Windows executable](https://github.com/zaim-tech/ZaimDroid/releases/download/0.1/main.exe).
 2. Place it in a folder of your choice.
 3. Connect your authorized Android device and unlock it.
