@@ -123,7 +123,7 @@ The device may not expose the requested camera/audio source to scrcpy. Check And
 
 ## Support The Project
 
-If ZaimDroid is useful to you, please star the repository and share it with other developers.
+If ZaimDroid is useful to you, please star the repository and share it with others.
 
 Made with love by **Zaim Sheali**.
 
