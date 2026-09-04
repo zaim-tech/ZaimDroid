@@ -99,6 +99,11 @@ Use wireless debugging only on a network you trust and only for devices you are 
 
 The device and computer must normally be connected to the same network. If Android displays a pairing code or pairing port, complete that pairing using the Android platform-tools workflow first.
 
+### Wireless Menu Options
+
+- **By IP address:** enter the complete address in the format `device-ip:5555`, for example `192.168.1.100:5555`.
+- **Enable wireless connection:** connect by USB first, choose this option, then disconnect the USB cable and run `adb connect <device-ip>:5555` from an authorized terminal.
+
 ## Camera and Recording
 
 Choose `2. Access camera` from the main menu. Available actions include:

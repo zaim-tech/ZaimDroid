@@ -3,6 +3,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+import re
 
 import colorama
 from colorama import Fore, Style
@@ -108,17 +109,34 @@ def show_devices() -> list[str]:
         print(Fore.GREEN + device)
     return devices
 
+def get_android_ip() -> str | None:
+    try:
+        # Run adb command to get wlan0 IP info
+        output = subprocess.check_output(
+            ["adb", "shell", "ip", "-f", "inet", "addr", "show", "wlan0"],
+            text=True,
+            stderr=subprocess.STDOUT,
+        )
+
+        # Extract IP address matching pattern (e.g., 192.168.1.50)
+        match = re.search(r"inet\s+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", output)
+        if match:
+            return match.group(1)
+        return None
+
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
 
 def connection_menu() -> None:
     while True:
         clear_screen()
         display_banner()
-        print(Fore.YELLOW + "1. By serial number")
-        print(Fore.YELLOW + "2. By IP address (wireless connection)")
-        print(Fore.YELLOW + "3. Connect via USB")
+        print(Fore.YELLOW + "1. By serial number\n")
+        print(Fore.YELLOW + "2. By IP address (wireless connection)\n")
+        print(Fore.YELLOW + "3. Connect via USB\n")
         print(Fore.YELLOW + "4. Enable wireless connection")
-        print(Fore.YELLOW + "   Use this after connecting by USB so you can switch to wireless")
-        print(Fore.YELLOW + "5. Back to main menu")
+        print(Fore.YELLOW + "   Use this after connecting by USB so you can switch to wireless\n")
+        print(Fore.YELLOW + "5. Back to main menu\n")
 
         try:
             choice = input(Fore.GREEN + "Enter your choice (1-5): " + Style.RESET_ALL).strip()
@@ -217,7 +235,12 @@ def connection_menu() -> None:
 
                 print(Fore.YELLOW + "Enabling wireless ADB on the connected device...")
                 loading_dots("Processing")
+                ip = get_android_ip()
+                if not ip:
+                    print(Fore.RED + "Failed to get device IP address.")
+                    return
                 result = run_adb("tcpip", "5555")
+                run_adb("connect", f"{ip}:5555")
                 print(Fore.GREEN + f"\n{result.stdout.strip()}")
                 print(Fore.GREEN + "Wireless ADB is now enabled on port 5555.")
                 print(Fore.GREEN + "Disconnect USB, then connect using: adb connect <device-ip>:5555")
@@ -274,13 +297,13 @@ def camera_menu() -> None:
     while True:
         clear_screen()
         display_banner()
-        print(Fore.YELLOW + "1. Front Camera                         5. Mic and Front Camera")
-        print(Fore.YELLOW + "2. Back Camera                          6. Mic and Back Camera")
-        print(Fore.YELLOW + "3. Front camera and recording mp4       7. Screen recording")
-        print(Fore.YELLOW + "4. Back camera and recording mp4        8. Back to main menu")
+        print(Fore.YELLOW + "1. Front Camera                         5. Mic and Front Camera\n")
+        print(Fore.YELLOW + "2. Back Camera                          6. Mic and Back Camera\n")
+        print(Fore.YELLOW + "3. Front camera and recording mp4       7. Screen recording\n")
+        print(Fore.YELLOW + "4. Back camera and recording mp4        8. Back to main menu\n")
 
         try:
-            choice = input(Fore.GREEN + "Enter your choice (1-8): " + Style.RESET_ALL).strip()
+            choice = input(Fore.GREEN + "\nEnter your choice (1-8): " + Style.RESET_ALL).strip()
         except KeyboardInterrupt:
             print(Fore.RED + "\nCamera menu interrupted by user.")
             return
@@ -318,11 +341,11 @@ def get_apps() -> None:
     while True:
         clear_screen()
         display_banner()
-        print(Fore.YELLOW + "1. Get installed apps")
-        print(Fore.YELLOW + "2. Back to main menu")
+        print(Fore.YELLOW + "1. Get installed apps\n")
+        print(Fore.YELLOW + "2. Back to main menu\n")
 
         try:
-            choice = input(Fore.GREEN + "Choose an option (1-2): " + Style.RESET_ALL).strip()
+            choice = input(Fore.GREEN + "\nChoose an option (1-2): " + Style.RESET_ALL).strip()
         except KeyboardInterrupt:
             print(Fore.RED + "\nApp menu interrupted by user.")
             return
@@ -363,7 +386,7 @@ def send_command() -> None:
         try:
             command = input(
                 Fore.GREEN
-                + "Enter the command to send to the device (or type 'exit' to return): "
+                + "\nEnter the command to send to the device (or type 'exit' to return): "
                 + Style.RESET_ALL
             ).strip()
         except KeyboardInterrupt:
@@ -380,11 +403,13 @@ def send_command() -> None:
             return
         except FileNotFoundError:
             print(Fore.RED + "Failed to execute command. Please ensure adb is installed and try again.")
+            time.sleep(1)
             return
         except subprocess.CalledProcessError as error:
             print(Fore.RED + "\nFailed to execute command. Please ensure adb is installed and try again.")
             if error.stderr:
                 print(Fore.RED + error.stderr.strip())
+            time.sleep(1)    
             return
 
 
@@ -415,13 +440,15 @@ def main() -> None:
     while True:
         clear_screen()
         display_banner()
-        print(Fore.YELLOW + "1. Connect to a device               5. Get installed apps")
-        print(Fore.YELLOW + "2. Access camera                     6. Send command to device")
-        print(Fore.YELLOW + "3. Disconnect from device            7. Send message to device")
-        print(Fore.YELLOW + "4. Get device information            8. Exit")
+        print(Fore.YELLOW + "\n1. Connect to a device               5. Get installed apps\n")
+        print(Fore.YELLOW + "\n2. Access camera                     6. Send command to device\n")
+        print(Fore.YELLOW + "\n3. Disconnect from device            7. Send message to device\n")
+        print(Fore.YELLOW + "\n4. Get device information            8. Mirror\n")
+        print(Fore.RED + "\n9. Exit\n")
+
 
         try:
-            choice = input(Fore.GREEN + "Choose an option (1-8): " + Style.RESET_ALL).strip()
+            choice = input(Fore.GREEN + "Choose an option (1-9): " + Style.RESET_ALL).strip()
         except KeyboardInterrupt:
             print(Fore.RED + "\nOperation interrupted by user.")
             return
@@ -456,10 +483,16 @@ def main() -> None:
                 print(Fore.RED + "Title and message cannot be empty.")
             continue
         if choice == "8":
+            try:
+                run_scrcpy()
+            except Exception as error:
+                print(Fore.RED + f"Failed to run scrcpy. Error: {error}")
+            continue
+        if choice == "9":
             print(Fore.YELLOW + "Exiting the program.")
             return
 
-        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, or 8.")
+        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, or 9.")
         time.sleep(1)
 
 
