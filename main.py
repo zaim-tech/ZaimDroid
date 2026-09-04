@@ -116,10 +116,12 @@ def connection_menu() -> None:
         print(Fore.YELLOW + "1. By serial number")
         print(Fore.YELLOW + "2. By IP address (wireless connection)")
         print(Fore.YELLOW + "3. Connect via USB")
-        print(Fore.YELLOW + "4. Back to main menu")
+        print(Fore.YELLOW + "4. Enable wireless connection")
+        print(Fore.YELLOW + "   Use this after connecting by USB so you can switch to wireless")
+        print(Fore.YELLOW + "5. Back to main menu")
 
         try:
-            choice = input(Fore.GREEN + "Enter your choice (1-4): " + Style.RESET_ALL).strip()
+            choice = input(Fore.GREEN + "Enter your choice (1-5): " + Style.RESET_ALL).strip()
         except KeyboardInterrupt:
             print(Fore.RED + "\nConnection menu interrupted by user.")
             return
@@ -208,9 +210,33 @@ def connection_menu() -> None:
                 return
 
         if choice == "4":
+            try:
+                devices = show_devices()
+                if not devices:
+                    return
+
+                print(Fore.YELLOW + "Enabling wireless ADB on the connected device...")
+                loading_dots("Processing")
+                result = run_adb("tcpip", "5555")
+                print(Fore.GREEN + f"\n{result.stdout.strip()}")
+                print(Fore.GREEN + "Wireless ADB is now enabled on port 5555.")
+                print(Fore.GREEN + "Disconnect USB, then connect using: adb connect <device-ip>:5555")
+                input(Fore.YELLOW + "\nPress Enter to continue..." + Style.RESET_ALL)
+                return
+
+            except FileNotFoundError:
+                print(Fore.RED + "Failed to run adb. Please ensure it is installed and try again.")
+                return
+            except subprocess.CalledProcessError as error:
+                print(Fore.RED + "\nFailed to enable wireless ADB.")
+                if error.stderr:
+                    print(Fore.RED + error.stderr.strip())
+                return
+
+        if choice == "5":
             return
 
-        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, or 4.")
+        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, or 5.")
         time.sleep(1)
 
 
@@ -375,6 +401,15 @@ def get_device_info() -> None:
         if error.stderr:
             print(Fore.RED + error.stderr.strip())
 
+def show_message(title:str, msg:str):
+    try:
+        run_adb("shell", f"am start -n com.android.chrome/com.google.android.apps.chrome.Main -a android.intent.action.VIEW -d \"data:text/html,%3C%21DOCTYPE%20html%3E%3Chtml%3E%3Cbody%20style%3D%27background%3Ablack%3Bcolor%3Awhite%3Btext-align%3Acenter%3Bpadding-top%3A100px%3Bfont-family%3Asans-serif%3B%27%3E%3Ch1%20style%3D%27color%3Ared%3Bfont-size%3A40px%3B%27%3E{title}%3C%2Fh1%3E%3Ch2%3E{msg}%3C%2Fh2%3E%3C%2Fbody%3E%3C%2Fhtml%3E\" -f 0x00080000")
+    except FileNotFoundError:
+        print(Fore.RED + "Failed to show message. Please ensure adb is installed and try again.")
+    except subprocess.CalledProcessError as error:
+        print(Fore.RED + "\nFailed to show message. Please ensure adb is installed and try again.")
+        if error.stderr:
+            print(Fore.RED + error.stderr.strip())
 
 def main() -> None:
     while True:
@@ -382,11 +417,11 @@ def main() -> None:
         display_banner()
         print(Fore.YELLOW + "1. Connect to a device               5. Get installed apps")
         print(Fore.YELLOW + "2. Access camera                     6. Send command to device")
-        print(Fore.YELLOW + "3. Disconnect from device            7. Exit")
-        print(Fore.YELLOW + "4. Get device information")
+        print(Fore.YELLOW + "3. Disconnect from device            7. Send message to device")
+        print(Fore.YELLOW + "4. Get device information            8. Exit")
 
         try:
-            choice = input(Fore.GREEN + "Choose an option (1-7): " + Style.RESET_ALL).strip()
+            choice = input(Fore.GREEN + "Choose an option (1-8): " + Style.RESET_ALL).strip()
         except KeyboardInterrupt:
             print(Fore.RED + "\nOperation interrupted by user.")
             return
@@ -410,10 +445,21 @@ def main() -> None:
             send_command()
             continue
         if choice == "7":
+            title = input(Fore.GREEN + "Enter the title of the message: " + Style.RESET_ALL).strip()
+            msg = input(Fore.GREEN + "Enter the message content: " + Style.RESET_ALL).strip()
+            if title and msg:
+                loading_dots("Sending message")
+                show_message(title, msg)
+                print(Fore.GREEN + "Message sent successfully!")
+                time.sleep(2)
+            else:
+                print(Fore.RED + "Title and message cannot be empty.")
+            continue
+        if choice == "8":
             print(Fore.YELLOW + "Exiting the program.")
             return
 
-        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, or 7.")
+        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, or 8.")
         time.sleep(1)
 
 
