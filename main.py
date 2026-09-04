@@ -111,14 +111,14 @@ def show_devices() -> list[str]:
 
 def get_android_ip() -> str | None:
     try:
-        # Run adb command to get wlan0 IP info
+        
         output = subprocess.check_output(
             ["adb", "shell", "ip", "-f", "inet", "addr", "show", "wlan0"],
             text=True,
             stderr=subprocess.STDOUT,
         )
 
-        # Extract IP address matching pattern (e.g., 192.168.1.50)
+       
         match = re.search(r"inet\s+([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)", output)
         if match:
             return match.group(1)
