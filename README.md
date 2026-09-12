@@ -63,7 +63,7 @@ The one-file executable contains the required Python application, ADB, scrcpy, D
 
 [![Download for Windows](https://img.shields.io/badge/Download-Windows-0078D6?logo=windows&logoColor=white)](https://github.com/zaim-tech/ZaimDroid/releases/download/0.1/main.exe)
 
-1. Download the [ZaimDroid Windows executable](https://github.com/zaim-tech/ZaimDroid/releases/download/0.1/main.exe).
+1. Download the [ZaimDroid Windows executable V0.1](https://github.com/zaim-tech/ZaimDroid/releases/download/0.1/main.exe), [ZaimDroid windows windows executable V0.2](https://github.com/zaim-tech/ZaimDroid/releases/download/0.2/ZaimDroid.exe).
 2. Place it in a folder of your choice.
 3. Connect your authorized Android device and unlock it.
 4. Run the executable.
