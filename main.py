@@ -4,6 +4,7 @@ import sys
 import time
 from pathlib import Path
 import re
+from adb_qr_pair import qr_pair
 
 import colorama
 from colorama import Fore, Style
@@ -134,12 +135,13 @@ def connection_menu() -> None:
         print(Fore.YELLOW + "1. By serial number\n")
         print(Fore.YELLOW + "2. By IP address (wireless connection)\n")
         print(Fore.YELLOW + "3. Connect via USB\n")
-        print(Fore.YELLOW + "4. Enable wireless connection")
+        print(Fore.YELLOW + "4. Connect via QR code\n")
+        print(Fore.YELLOW + "5. Enable wireless connection")
         print(Fore.YELLOW + "   Use this after connecting by USB so you can switch to wireless\n")
-        print(Fore.YELLOW + "5. Back to main menu\n")
+        print(Fore.YELLOW + "6. Back to main menu\n")
 
         try:
-            choice = input(Fore.GREEN + "Enter your choice (1-5): " + Style.RESET_ALL).strip()
+            choice = input(Fore.GREEN + "Enter your choice (1-6): " + Style.RESET_ALL).strip()
         except KeyboardInterrupt:
             print(Fore.RED + "\nConnection menu interrupted by user.")
             return
@@ -226,8 +228,15 @@ def connection_menu() -> None:
                 if error.stderr:
                     print(Fore.RED + error.stderr.strip())
                 return
-
         if choice == "4":
+            try:
+                qr_pair(ADB)
+            except Exception as error:
+                print(Fore.RED + f"Error: {error}")
+                input(Fore.YELLOW + "\nPress Enter to continue..." + Style.RESET_ALL)
+            continue
+
+        if choice == "5":
             try:
                 devices = show_devices()
                 if not devices:
@@ -256,10 +265,10 @@ def connection_menu() -> None:
                     print(Fore.RED + error.stderr.strip())
                 return
 
-        if choice == "5":
+        if choice == "6":
             return
 
-        print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, or 5.")
+        print(Fore.RED + "Invalid choice. Please enter a number from 1 to 6.")
         time.sleep(1)
 
 
