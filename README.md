@@ -40,6 +40,7 @@ ZaimDroid is not an exploit framework, credential-stealing tool, or permission-b
 - Connect to an Android device over USB.
 - Connect to an authorized device using its serial number.
 - Connect over a TCP/IP address.
+- Pair and connect through Android Wireless Debugging QR code.
 - Mirror and control the device with scrcpy.
 - Test the front or back camera.
 - Record the screen or camera output to `output.mp4`.
@@ -52,10 +53,11 @@ ZaimDroid is not an exploit framework, credential-stealing tool, or permission-b
 ## Requirements
 
 - Windows 10 or newer.
-- The built ZaimDroid Windows executable.
+- The built `ZaimDroid.exe` Windows executable, or Python 3.10+ for development.
 - An Android device with USB debugging enabled.
+- For QR pairing, Android Wireless Debugging and a shared Wi-Fi network.
 
-The executable already contains the required application files. You do not need to install Python, ADB, scrcpy, or separate DLL files.
+The one-file executable contains the required Python application, ADB, scrcpy, DLL files, `scrcpy-server`, `scrcpy.png`, and `disconnected.png`. You do not need to install Python, ADB, scrcpy, or separate DLL files when using the executable.
 
 ## Installation
 
@@ -71,13 +73,15 @@ The main menu contains these options:
 
 | Option | Action |
 | --- | --- |
-| 1 | Connect to a device by serial number, IP address, or USB |
+| 1 | Open device connection options |
 | 2 | Open camera and recording options |
 | 3 | Disconnect ADB connections |
 | 4 | Display device information |
 | 5 | List installed apps/packages |
 | 6 | Send a command through `adb shell` |
-| 7 | Exit the program |
+| 7 | Send a message to the device browser |
+| 8 | Mirror the device with scrcpy |
+| 9 | Exit the program |
 
 ## USB Connection
 
@@ -102,7 +106,21 @@ The device and computer must normally be connected to the same network. If Andro
 ### Wireless Menu Options
 
 - **By IP address:** enter the complete address in the format `device-ip:5555`, for example `192.168.1.100:5555`.
+- **Pair using QR code:** choose option `4`, then scan the terminal QR code from Android **Developer options > Wireless debugging > Pair device with QR code**. The tool discovers the phone's pairing service, runs `adb pair`, discovers the connection service, and runs `adb connect` automatically.
 - **Enable wireless connection:** connect by USB first, choose this option, then disconnect the USB cable and run `adb connect <device-ip>:5555` from an authorized terminal.
+
+The computer and phone must be on the same Wi-Fi network. QR pairing requires Android platform-tools with mDNS support; the bundled ADB executable is used by the Windows build.
+
+## Build From Source
+
+Install the Python dependencies from `requirements.txt`, then build the one-file Windows executable:
+
+```powershell
+pip install -r requirements.txt
+pyinstaller --clean --noconfirm ZaimDroid.spec
+```
+
+The finished executable is written to `dist\ZaimDroid.exe`. The spec file embeds ADB, scrcpy, their DLL files, `scrcpy-server`, and both PNG assets.
 
 ## Camera and Recording
 

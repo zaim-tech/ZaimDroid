@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[('adb.exe', '.'), ('scrcpy.exe', '.'), ('AdbWinApi.dll', '.'), ('AdbWinUsbApi.dll', '.'), ('avcodec-62.dll', '.'), ('avformat-62.dll', '.'), ('avutil-60.dll', '.'), ('libusb-1.0.dll', '.'), ('SDL3.dll', '.'), ('swresample-6.dll', '.')],
-    datas=[('scrcpy-server', '.')],
+    datas=[('scrcpy-server', '.'), ('scrcpy.png', '.'), ('disconnected.png', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
